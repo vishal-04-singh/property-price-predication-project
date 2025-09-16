@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Services - Vyom.AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7fafc;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .ai-text {
+            color: #48bb78;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #4299e1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 40px 0;
+        }
+
+        .category-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .category-subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4299e1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .filters-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .filters-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .filter-input {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .filter-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4299e1;
+        }
+
+        .filter-checkbox-label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        /* Sellers Grid */
+        .sellers-section {
+            margin-bottom: 40px;
+        }
+
+        .sellers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .sellers-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .sellers-count {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .sellers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .seller-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .seller-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #4299e1;
+        }
+
+        .seller-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .seller-info {
+            flex: 1;
+        }
+
+        .seller-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 8px;
+            background: #f0fff4;
+            color: #38a169;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .seller-category {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .seller-location {
+            color: #718096;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .seller-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .seller-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .seller-stat {
+            text-align: center;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .seller-stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4299e1;
+            margin-bottom: 3px;
+        }
+
+        .seller-stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .seller-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .primary-btn {
+            background: #4299e1;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .secondary-btn {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .secondary-btn:hover {
+            background: #edf2f7;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .category-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sellers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sellers-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                Vyom.<span class="ai-text">AI</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="buyer-dashboard.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Category Header -->
+            <div class="category-header">
+                <h1 class="category-title">Construction Services</h1>
+                <p class="category-subtitle">Find trusted construction companies, contractors, and renovation experts</p>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalSellers">24</div>
+                        <div class="stat-label">Total Sellers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="verifiedSellers">18</div>
+                        <div class="stat-label">Verified Sellers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="avgRating">4.8</div>
+                        <div class="stat-label">Avg Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filters-header">
+                    <div class="filters-icon">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3 class="filters-title">Filter Sellers</h3>
+                </div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Search by Name</label>
+                        <input type="text" class="filter-input" id="searchInput" placeholder="Search sellers...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Location</label>
+                        <input type="text" class="filter-input" id="locationInput" placeholder="Enter city or area">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Experience</label>
+                        <select class="filter-select" id="experienceFilter">
+                            <option value="">All Experience Levels</option>
+                            <option value="0-2">0-2 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5-10">5-10 years</option>
+                            <option value="10+">10+ years</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Verification</label>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" id="verifiedOnly">
+                            <label class="filter-checkbox-label" for="verifiedOnly">Show only verified sellers</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sellers Section -->
+            <div class="sellers-section">
+                <div class="sellers-header">
+                    <h2 class="sellers-title">Available Sellers</h2>
+                    <span class="sellers-count" id="sellersCount">Showing 24 sellers</span>
+                </div>
+                <div class="sellers-grid" id="sellersGrid">
+                    <!-- Seller cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        class ConstructionCategory {
+            constructor() {
+                this.sellers = [];
+                this.filteredSellers = [];
+                this.init();
+            }
+
+            init() {
+                this.loadSellers();
+                this.bindEvents();
+                this.renderSellers();
+            }
+
+            loadSellers() {
+                // Simulated seller data
+                this.sellers = [
+                    {
+                        id: 1,
+                        name: "ABC Construction Co.",
+                        category: "Construction Company",
+                        location: "Mumbai, Maharashtra",
+                        description: "Leading construction company with 15+ years of experience in residential and commercial projects. Specialized in modern architecture and sustainable building practices.",
+                        experience: "15+ years",
+                        projects: 150,
+                        rating: 4.9,
+                        verified: true,
+                        phone: "+91 98765 43210",
+                        email: "contact@abcconstruction.com"
+                    },
+                    {
+                        id: 2,
+                        name: "Premier Builders",
+                        category: "Contractor",
+                        location: "Delhi, NCR",
+                        description: "Expert contractors specializing in home renovations, interior modifications, and structural improvements. Quality workmanship guaranteed.",
+                        experience: "8 years",
+                        projects: 85,
+                        rating: 4.7,
+                        verified: true,
+                        phone: "+91 98765 43211",
+                        email: "info@premierbuilders.com"
+                    },
+                    {
+                        id: 3,
+                        name: "Urban Renovations",
+                        category: "Renovation Specialist",
+                        location: "Bangalore, Karnataka",
+                        description: "Specialized in modern home renovations, kitchen remodeling, and bathroom upgrades. Contemporary designs with premium materials.",
+                        experience: "12 years",
+                        projects: 120,
+                        rating: 4.8,
+                        verified: true,
+                        phone: "+91 98765 43212",
+                        email: "hello@urbanrenovations.com"
+                    },
+                    {
+                        id: 4,
+                        name: "Heritage Construction",
+                        category: "Construction Company",
+                        location: "Chennai, Tamil Nadu",
+                        description: "Traditional and modern construction services. Expert in heritage restoration and new building construction with attention to detail.",
+                        experience: "20+ years",
+                        projects: 200,
+                        rating: 4.6,
+                        verified: false,
+                        phone: "+91 98765 43213",
+                        email: "contact@heritageconstruction.com"
+                    },
+                    {
+                        id: 5,
+                        name: "Green Build Solutions",
+                        category: "Eco-Friendly Construction",
+                        location: "Pune, Maharashtra",
+                        description: "Sustainable construction and green building solutions. LEED certified projects with eco-friendly materials and energy-efficient designs.",
+                        experience: "10 years",
+                        projects: 75,
+                        rating: 4.9,
+                        verified: true,
+                        phone: "+91 98765 43214",
+                        email: "info@greenbuildsolutions.com"
+                    },
+                    {
+                        id: 6,
+                        name: "Metro Contractors",
+                        category: "Contractor",
+                        location: "Hyderabad, Telangana",
+                        description: "Full-service contracting for residential and commercial projects. From foundation to finishing, we handle everything with precision.",
+                        experience: "6 years",
+                        projects: 60,
+                        rating: 4.5,
+                        verified: false,
+                        phone: "+91 98765 43215",
+                        email: "contact@metrocontractors.com"
+                    }
+                ];
+                this.filteredSellers = [...this.sellers];
+            }
+
+            bindEvents() {
+                // Search functionality
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.filterSellers();
+                });
+
+                // Location filter
+                document.getElementById('locationInput').addEventListener('input', (e) => {
+                    this.filterSellers();
+                });
+
+                // Experience filter
+                document.getElementById('experienceFilter').addEventListener('change', (e) => {
+                    this.filterSellers();
+                });
+
+                // Verification filter
+                document.getElementById('verifiedOnly').addEventListener('change', (e) => {
+                    this.filterSellers();
+                });
+            }
+
+            filterSellers() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const locationTerm = document.getElementById('locationInput').value.toLowerCase();
+                const experienceFilter = document.getElementById('experienceFilter').value;
+                const verifiedOnly = document.getElementById('verifiedOnly').checked;
+
+                this.filteredSellers = this.sellers.filter(seller => {
+                    // Search filter
+                    const matchesSearch = seller.name.toLowerCase().includes(searchTerm) ||
+                                        seller.description.toLowerCase().includes(searchTerm);
+
+                    // Location filter
+                    const matchesLocation = seller.location.toLowerCase().includes(locationTerm);
+
+                    // Experience filter
+                    let matchesExperience = true;
+                    if (experienceFilter) {
+                        const [min, max] = experienceFilter.split('-').map(x => x === '+' ? 999 : parseInt(x));
+                        const sellerExp = parseInt(seller.experience);
+                        matchesExperience = sellerExp >= min && (max === 999 || sellerExp <= max);
+                    }
+
+                    // Verification filter
+                    const matchesVerification = !verifiedOnly || seller.verified;
+
+                    return matchesSearch && matchesLocation && matchesExperience && matchesVerification;
+                });
+
+                this.renderSellers();
+            }
+
+            renderSellers() {
+                const grid = document.getElementById('sellersGrid');
+                const count = document.getElementById('sellersCount');
+
+                // Update count
+                count.textContent = `Showing ${this.filteredSellers.length} sellers`;
+
+                // Clear grid
+                grid.innerHTML = '';
+
+                // Render seller cards
+                this.filteredSellers.forEach(seller => {
+                    const card = this.createSellerCard(seller);
+                    grid.appendChild(card);
+                });
+            }
+
+            createSellerCard(seller) {
+                const card = document.createElement('div');
+                card.className = 'seller-card';
+
+                card.innerHTML = `
+                    <div class="seller-header">
+                        <div class="seller-avatar">
+                            ${this.getInitials(seller.name)}
+                        </div>
+                        <div class="seller-info">
+                            <div class="seller-name">
+                                ${seller.name}
+                                ${seller.verified ? '<span class="verified-badge"><i class="fas fa-check"></i> Verified</span>' : ''}
+                            </div>
+                            <div class="seller-category">${seller.category}</div>
+                            <div class="seller-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${seller.location}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="seller-description">${seller.description}</div>
+                    <div class="seller-stats">
+                        <div class="seller-stat">
+                            <div class="seller-stat-value">${seller.experience}</div>
+                            <div class="seller-stat-label">Experience</div>
+                        </div>
+                        <div class="seller-stat">
+                            <div class="seller-stat-value">${seller.projects}</div>
+                            <div class="seller-stat-label">Projects</div>
+                        </div>
+                        <div class="seller-stat">
+                            <div class="seller-stat-value">${seller.rating}</div>
+                            <div class="seller-stat-label">Rating</div>
+                        </div>
+                    </div>
+                    <div class="seller-actions">
+                        <button class="action-btn primary-btn" onclick="contactSeller(${seller.id})">
+                            <i class="fas fa-phone"></i>
+                            Contact
+                        </button>
+                        <button class="action-btn secondary-btn" onclick="viewProfile(${seller.id})">
+                            <i class="fas fa-eye"></i>
+                            View Profile
+                        </button>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            getInitials(name) {
+                return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            }
+        }
+
+        // Global functions
+        function contactSeller(sellerId) {
+            alert(`Contacting seller ID: ${sellerId}\nThis would open a contact form or initiate a call.`);
+        }
+
+        function viewProfile(sellerId) {
+            alert(`Viewing profile for seller ID: ${sellerId}\nThis would navigate to a detailed seller profile page.`);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'auth.html';
+        }
+
+        // Initialize the category page
+        document.addEventListener('DOMContentLoaded', () => {
+            new ConstructionCategory();
+        });
+    </script>
+</body>
+</html>
+

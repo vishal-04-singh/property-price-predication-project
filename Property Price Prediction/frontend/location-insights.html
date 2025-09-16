@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Insights - Vyom.AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('./assets/locationinsights.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #1a202c;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Section */
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .logo .ai-text {
+            color: #48bb78;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #4299e1;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            z-index: 1001;
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-content.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: #4a5568;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f7fafc;
+            color: #4299e1;
+        }
+
+        .dropdown-icon {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 40px 0;
+        }
+
+        .insights-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .insights-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .insights-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .insights-title .insights-text {
+            color: #48bb78;
+        }
+
+        .insights-subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .search-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .search-icon {
+            color: #4299e1;
+            font-size: 1.2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .search-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .search-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .location-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .location-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        /* Map Section */
+        .map-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .map-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .map-container {
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Insights Grid */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .insights-item {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .insights-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .insights-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .insights-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .insights-item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .insights-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #48bb78;
+            margin-bottom: 10px;
+        }
+
+        .insights-description {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Nearby Places */
+        .nearby-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .nearby-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nearby-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .nearby-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .nearby-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nearby-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nearby-icon {
+            width: 30px;
+            height: 30px;
+            background: #48bb78;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .nearby-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .nearby-distance {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .insights-card {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .insights-title {
+                font-size: 2rem;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .form-group {
+                min-width: auto;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nearby-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                Vyom.<span class="ai-text">AI</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        Services
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="weather.html">
+                            <i class="fas fa-cloud-sun"></i>
+                            Live Weather
+                        </a>
+                        <a href="market-analytics.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Market Analytics
+                        </a>
+                        <a href="location-insights.html">
+                            <i class="fas fa-map-marked-alt"></i>
+                            Location Insights
+                        </a>
+                        <a href="roi-calculator.html">
+                            <i class="fas fa-calculator"></i>
+                            ROI Calculator
+                        </a>
+                        <a href="property-reports.html">
+                            <i class="fas fa-file-contract"></i>
+                            Property Reports
+                        </a>
+                    </div>
+                </div>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    About
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="insights-card">
+                <!-- Header -->
+                <div class="insights-header">
+                    <h1 class="insights-title">Location <span class="insights-text">Insights</span></h1>
+                    <p class="insights-subtitle">Discover neighborhood insights, nearby amenities, and location analysis</p>
+                </div>
+
+                <!-- Search Section -->
+                <div class="search-section">
+                    <h2 class="search-title">
+                        <i class="fas fa-search search-icon"></i>
+                        Location Search
+                    </h2>
+                    <form class="search-form" id="locationForm">
+                        <div class="form-group">
+                            <label for="addressInput" class="form-label">Address or location</label>
+                            <input type="text" id="addressInput" class="form-input" placeholder="Enter address, city, or coordinates..." value="Delhi, India">
+                        </div>
+                        <button type="submit" class="search-btn">Search Location</button>
+                        <button type="button" class="location-btn" id="currentLocationBtn">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Use My Location
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Map Section -->
+                <div class="map-section">
+                    <h2 class="map-title">Interactive Map</h2>
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                </div>
+
+                <!-- Insights Grid -->
+                <div class="insights-grid">
+                    <div class="insights-item">
+                        <div class="insights-item-header">
+                            <div class="insights-icon">
+                                <i class="fas fa-school"></i>
+                            </div>
+                            <h3 class="insights-item-title">Schools</h3>
+                        </div>
+                        <div class="insights-value" id="schoolsCount">12</div>
+                        <p class="insights-description">Schools within 2km radius</p>
+                    </div>
+
+                    <div class="insights-item">
+                        <div class="insights-item-header">
+                            <div class="insights-icon">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <h3 class="insights-item-title">Healthcare</h3>
+                        </div>
+                        <div class="insights-value" id="healthcareCount">8</div>
+                        <p class="insights-description">Hospitals and clinics nearby</p>
+                    </div>
+
+                    <div class="insights-item">
+                        <div class="insights-item-header">
+                            <div class="insights-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <h3 class="insights-item-title">Shopping</h3>
+                        </div>
+                        <div class="insights-value" id="shoppingCount">25</div>
+                        <p class="insights-description">Shopping centers and markets</p>
+                    </div>
+
+                    <div class="insights-item">
+                        <div class="insights-item-header">
+                            <div class="insights-icon">
+                                <i class="fas fa-bus"></i>
+                            </div>
+                            <h3 class="insights-item-title">Transport</h3>
+                        </div>
+                        <div class="insights-value" id="transportCount">15</div>
+                        <p class="insights-description">Public transport stops</p>
+                    </div>
+                </div>
+
+                <!-- Nearby Places -->
+                <div class="nearby-section">
+                    <h2 class="nearby-title">Nearby Places</h2>
+                    <div class="nearby-grid" id="nearbyGrid">
+                        <!-- Nearby places will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Location Insights functionality
+        class LocationInsights {
+            constructor() {
+                this.map = null;
+                this.markers = [];
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.initializeMap();
+                this.loadDefaultLocation();
+            }
+
+            bindEvents() {
+                const form = document.getElementById('locationForm');
+                const currentLocationBtn = document.getElementById('currentLocationBtn');
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.searchLocation();
+                });
+
+                currentLocationBtn.addEventListener('click', () => {
+                    this.getCurrentLocation();
+                });
+            }
+
+            initializeMap() {
+                // Initialize Leaflet map
+                this.map = L.map('map').setView([28.7041, 77.1025], 13); // Delhi coordinates
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(this.map);
+
+                // Add click event to map
+                this.map.on('click', (e) => {
+                    this.handleMapClick(e.latlng);
+                });
+            }
+
+            searchLocation() {
+                const address = document.getElementById('addressInput').value;
+                if (!address) return;
+
+                // Simulate geocoding
+                this.simulateGeocoding(address);
+            }
+
+            getCurrentLocation() {
+                if (!navigator.geolocation) {
+                    alert('Geolocation is not supported by your browser');
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        this.updateMapLocation(latitude, longitude);
+                        this.loadLocationInsights(latitude, longitude);
+                    },
+                    (error) => {
+                        alert('Unable to get your location. Please check your browser settings.');
+                    }
+                );
+            }
+
+            simulateGeocoding(address) {
+                // Simulate API call
+                const coordinates = this.getRandomCoordinates();
+                this.updateMapLocation(coordinates.lat, coordinates.lng);
+                this.loadLocationInsights(coordinates.lat, coordinates.lng);
+            }
+
+            getRandomCoordinates() {
+                // Generate random coordinates around Delhi
+                const lat = 28.7041 + (Math.random() - 0.5) * 0.1;
+                const lng = 77.1025 + (Math.random() - 0.5) * 0.1;
+                return { lat, lng };
+            }
+
+            updateMapLocation(lat, lng) {
+                this.map.setView([lat, lng], 15);
+                this.clearMarkers();
+                this.addMarker(lat, lng, 'Selected Location');
+            }
+
+            handleMapClick(latlng) {
+                this.clearMarkers();
+                this.addMarker(latlng.lat, latlng.lng, 'Clicked Location');
+                this.loadLocationInsights(latlng.lat, latlng.lng);
+            }
+
+            addMarker(lat, lng, title) {
+                const marker = L.marker([lat, lng]).addTo(this.map);
+                marker.bindPopup(title);
+                this.markers.push(marker);
+            }
+
+            clearMarkers() {
+                this.markers.forEach(marker => this.map.removeLayer(marker));
+                this.markers = [];
+            }
+
+            loadLocationInsights(lat, lng) {
+                this.updateInsights();
+                this.loadNearbyPlaces();
+            }
+
+            updateInsights() {
+                // Simulate updating insights data
+                const insights = {
+                    schools: Math.floor(Math.random() * 20) + 5,
+                    healthcare: Math.floor(Math.random() * 15) + 3,
+                    shopping: Math.floor(Math.random() * 30) + 10,
+                    transport: Math.floor(Math.random() * 25) + 8
+                };
+
+                document.getElementById('schoolsCount').textContent = insights.schools;
+                document.getElementById('healthcareCount').textContent = insights.healthcare;
+                document.getElementById('shoppingCount').textContent = insights.shopping;
+                document.getElementById('transportCount').textContent = insights.transport;
+            }
+
+            loadNearbyPlaces() {
+                const places = [
+                    { name: 'Central Park', type: 'park', distance: '0.5 km', icon: 'tree' },
+                    { name: 'Metro Station', type: 'transport', distance: '0.8 km', icon: 'subway' },
+                    { name: 'Shopping Mall', type: 'shopping', distance: '1.2 km', icon: 'shopping-bag' },
+                    { name: 'Hospital', type: 'healthcare', distance: '1.5 km', icon: 'hospital' },
+                    { name: 'School', type: 'education', distance: '0.9 km', icon: 'graduation-cap' },
+                    { name: 'Restaurant', type: 'food', distance: '0.3 km', icon: 'utensils' }
+                ];
+
+                const nearbyGrid = document.getElementById('nearbyGrid');
+                nearbyGrid.innerHTML = '';
+
+                places.forEach(place => {
+                    const placeElement = document.createElement('div');
+                    placeElement.className = 'nearby-item';
+                    placeElement.innerHTML = `
+                        <div class="nearby-item-header">
+                            <div class="nearby-icon">
+                                <i class="fas fa-${place.icon}"></i>
+                            </div>
+                            <div>
+                                <div class="nearby-name">${place.name}</div>
+                                <div class="nearby-distance">${place.distance}</div>
+                            </div>
+                        </div>
+                    `;
+                    nearbyGrid.appendChild(placeElement);
+                });
+            }
+
+            loadDefaultLocation() {
+                this.loadLocationInsights(28.7041, 77.1025);
+            }
+        }
+
+        // Initialize the location insights app
+        document.addEventListener('DOMContentLoaded', () => {
+            new LocationInsights();
+        });
+
+        // Dropdown menu functionality with improved timing
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+                let timeoutId;
+                
+                // Show dropdown on mouse enter
+                dropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(timeoutId);
+                    dropdown.classList.add('active');
+                    dropdownContent.classList.add('show');
+                });
+                
+                // Hide dropdown on mouse leave with delay
+                dropdown.addEventListener('mouseleave', function() {
+                    timeoutId = setTimeout(() => {
+                        dropdown.classList.remove('active');
+                        dropdownContent.classList.remove('show');
+                    }, 500); // 500ms delay - much more user-friendly
+                });
+                
+                // Keep dropdown open when hovering over content
+                dropdownContent.addEventListener('mouseenter', function() {
+                    clearTimeout(timeoutId);
+                });
+                
+                dropdownContent.addEventListener('mouseleave', function() {
+                    timeoutId = setTimeout(() => {
+                        dropdown.classList.remove('active');
+                        dropdownContent.classList.remove('show');
+                    }, 500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

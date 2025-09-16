@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Analytics - Vyom.AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('./assets/propertyreports.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #1a202c;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Section */
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .logo .ai-text {
+            color: #48bb78;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #4299e1;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            z-index: 1001;
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-content.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: #4a5568;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f7fafc;
+            color: #4299e1;
+        }
+
+        .dropdown-icon {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 40px 0;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .analytics-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .analytics-title .analytics-text {
+            color: #48bb78;
+        }
+
+        .analytics-subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .filter-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .filter-icon {
+            color: #4299e1;
+            font-size: 1.2rem;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .filter-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            align-self: end;
+        }
+
+        .filter-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .analytics-item {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .analytics-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .analytics-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .analytics-item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .analytics-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #48bb78;
+            margin-bottom: 10px;
+        }
+
+        .analytics-description {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .analytics-card {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .analytics-title {
+                font-size: 2rem;
+            }
+
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                Vyom.<span class="ai-text">AI</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        Services
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="weather.html">
+                            <i class="fas fa-cloud-sun"></i>
+                            Live Weather
+                        </a>
+                        <a href="market-analytics.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Market Analytics
+                        </a>
+                        <a href="location-insights.html">
+                            <i class="fas fa-map-marked-alt"></i>
+                            Location Insights
+                        </a>
+                        <a href="roi-calculator.html">
+                            <i class="fas fa-calculator"></i>
+                            ROI Calculator
+                        </a>
+                        <a href="property-reports.html">
+                            <i class="fas fa-file-contract"></i>
+                            Property Reports
+                        </a>
+                    </div>
+                </div>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    About
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="analytics-card">
+                <!-- Header -->
+                <div class="analytics-header">
+                    <h1 class="analytics-title">Market <span class="analytics-text">Analytics</span></h1>
+                    <p class="analytics-subtitle">Comprehensive market analysis and trends for informed property decisions</p>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h2 class="filter-title">
+                        <i class="fas fa-filter filter-icon"></i>
+                        Market Filters
+                    </h2>
+                    <form class="filter-form" id="analyticsForm">
+                        <div class="form-group">
+                            <label for="locationFilter" class="form-label">Location</label>
+                            <select id="locationFilter" class="form-select">
+                                <option value="all">All Locations</option>
+                                <option value="downtown">Downtown</option>
+                                <option value="suburbs">Suburbs</option>
+                                <option value="beachfront">Beachfront</option>
+                                <option value="rural">Rural</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyTypeFilter" class="form-label">Property Type</label>
+                            <select id="propertyTypeFilter" class="form-select">
+                                <option value="all">All Types</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="villa">Villa</option>
+                                <option value="townhouse">Townhouse</option>
+                                <option value="commercial">Commercial</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeRangeFilter" class="form-label">Time Range</label>
+                            <select id="timeRangeFilter" class="form-select">
+                                <option value="1month">Last Month</option>
+                                <option value="3months">Last 3 Months</option>
+                                <option value="6months">Last 6 Months</option>
+                                <option value="1year">Last Year</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="filter-btn">Update Analytics</button>
+                    </form>
+                </div>
+
+                <!-- Analytics Grid -->
+                <div class="analytics-grid">
+                    <div class="analytics-item">
+                        <div class="analytics-item-header">
+                            <div class="analytics-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <h3 class="analytics-item-title">Average Price</h3>
+                        </div>
+                        <div class="analytics-value" id="avgPrice">₹4,05,47,500</div>
+                        <p class="analytics-description">Median property price in selected area</p>
+                    </div>
+
+                    <div class="analytics-item">
+                        <div class="analytics-item-header">
+                            <div class="analytics-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="analytics-item-title">Price Trend</h3>
+                        </div>
+                        <div class="analytics-value" id="priceTrend">+12.5%</div>
+                        <p class="analytics-description">Year-over-year price growth</p>
+                    </div>
+
+                    <div class="analytics-item">
+                        <div class="analytics-item-header">
+                            <div class="analytics-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h3 class="analytics-item-title">Days on Market</h3>
+                        </div>
+                        <div class="analytics-value" id="daysOnMarket">45</div>
+                        <p class="analytics-description">Average time to sell</p>
+                    </div>
+
+                    <div class="analytics-item">
+                        <div class="analytics-item-header">
+                            <div class="analytics-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h3 class="analytics-item-title">Inventory</h3>
+                        </div>
+                        <div class="analytics-value" id="inventory">1,247</div>
+                        <p class="analytics-description">Available properties</p>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="chart-section">
+                    <h2 class="chart-title">Price Trends Over Time</h2>
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title">Property Type Distribution</h2>
+                    <div class="chart-container">
+                        <canvas id="propertyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Market Analytics functionality
+        class MarketAnalytics {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.loadAnalytics();
+                this.createCharts();
+            }
+
+            bindEvents() {
+                const form = document.getElementById('analyticsForm');
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.updateAnalytics();
+                });
+            }
+
+            loadAnalytics() {
+                // Simulate loading analytics data
+                this.updateMetrics();
+            }
+
+            updateMetrics() {
+                // Simulate real-time data updates
+                const metrics = {
+                    avgPrice: '₹' + (Math.random() * 25000000 + 20000000).toFixed(0),
+                    priceTrend: (Math.random() * 20 - 5).toFixed(1) + '%',
+                    daysOnMarket: Math.floor(Math.random() * 60 + 30),
+                    inventory: Math.floor(Math.random() * 2000 + 500)
+                };
+
+                document.getElementById('avgPrice').textContent = metrics.avgPrice;
+                document.getElementById('priceTrend').textContent = metrics.priceTrend;
+                document.getElementById('daysOnMarket').textContent = metrics.daysOnMarket;
+                document.getElementById('inventory').textContent = metrics.inventory;
+            }
+
+            updateAnalytics() {
+                this.updateMetrics();
+                this.updateCharts();
+            }
+
+            createCharts() {
+                this.createPriceChart();
+                this.createPropertyChart();
+            }
+
+            createPriceChart() {
+                const ctx = document.getElementById('priceChart').getContext('2d');
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+                const prices = [450000, 465000, 480000, 475000, 490000, 485000];
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Average Price',
+                            data: prices,
+                            borderColor: '#4299e1',
+                            backgroundColor: 'rgba(66, 153, 225, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '₹' + (value / 100000) + 'L';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createPropertyChart() {
+                const ctx = document.getElementById('propertyChart').getContext('2d');
+                
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Apartments', 'Villas', 'Townhouses', 'Commercial'],
+                        datasets: [{
+                            data: [45, 25, 20, 10],
+                            backgroundColor: [
+                                '#4299e1',
+                                '#48bb78',
+                                '#ed8936',
+                                '#e53e3e'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            updateCharts() {
+                // Update chart data based on filters
+                console.log('Updating charts with new data...');
+            }
+        }
+
+        // Initialize the analytics app
+        document.addEventListener('DOMContentLoaded', () => {
+            new MarketAnalytics();
+        });
+
+        // Dropdown menu functionality with improved timing
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+                let timeoutId;
+                
+                // Show dropdown on mouse enter
+                dropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(timeoutId);
+                    dropdown.classList.add('active');
+                    dropdownContent.classList.add('show');
+                });
+                
+                // Hide dropdown on mouse leave with delay
+                dropdown.addEventListener('mouseleave', function() {
+                    timeoutId = setTimeout(() => {
+                        dropdown.classList.remove('active');
+                        dropdownContent.classList.remove('show');
+                    }, 500); // 500ms delay - much more user-friendly
+                });
+                
+                // Keep dropdown open when hovering over content
+                dropdownContent.addEventListener('mouseenter', function() {
+                    clearTimeout(timeoutId);
+                });
+                
+                dropdownContent.addEventListener('mouseleave', function() {
+                    timeoutId = setTimeout(() => {
+                        dropdown.classList.remove('active');
+                        dropdownContent.classList.remove('show');
+                    }, 500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

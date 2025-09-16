@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Vyom.AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a202c;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .ai-text {
+            color: #48bb78;
+        }
+
+        .auth-subtitle {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            margin-bottom: 30px;
+        }
+
+        .role-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: #4299e1;
+            transform: translateY(-2px);
+        }
+
+        .role-option.selected {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .role-icon {
+            font-size: 1.5rem;
+            color: #4299e1;
+            margin-bottom: 8px;
+        }
+
+        .role-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .role-description {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        /* Password Input Wrapper */
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input-wrapper .form-input {
+            padding-right: 50px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #4299e1;
+        }
+
+        /* Forgot Password Link */
+        .forgot-password {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        .forgot-password a {
+            color: #4299e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 12px 16px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f7fafc;
+        }
+
+        .file-upload-label:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .file-upload-icon {
+            font-size: 1.5rem;
+            color: #4299e1;
+            margin-bottom: 8px;
+        }
+
+        .file-upload-text {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .file-upload-hint {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .auth-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .auth-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toggle between Login/Signup */
+        .auth-toggle {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .toggle-link {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Progress Bar for Seller Profile */
+        .profile-progress {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .role-options {
+                flex-direction: column;
+            }
+
+            .auth-logo {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #4299e1;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error/Success Messages */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .message.error {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+        }
+
+        .message.success {
+            background: #c6f6d5;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Header -->
+        <div class="auth-header">
+            <div class="auth-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                Vyom.<span class="ai-text">AI</span>
+            </div>
+            <p class="auth-subtitle">Join our trusted property services platform</p>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="role-selection" id="roleSelection">
+            <h3 class="role-title">Choose Your Role</h3>
+            <div class="role-options">
+                <div class="role-option" data-role="buyer">
+                    <div class="role-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="role-name">Buyer</div>
+                    <div class="role-description">Browse & hire services</div>
+                </div>
+                <div class="role-option" data-role="seller">
+                    <div class="role-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="role-name">Seller</div>
+                    <div class="role-description">Offer your services</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buyer Signup Form -->
+        <form class="auth-form" id="buyerSignupForm">
+            <h3 class="role-title">Create Buyer Account</h3>
+            
+            <div class="form-group">
+                <label for="buyerName" class="form-label">Full Name *</label>
+                <input type="text" id="buyerName" class="form-input" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="buyerEmail" class="form-label">Email Address *</label>
+                <input type="email" id="buyerEmail" class="form-input" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="buyerPhone" class="form-label">Phone Number *</label>
+                <input type="tel" id="buyerPhone" class="form-input" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="buyerPassword" class="form-label">Password *</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="buyerPassword" class="form-input" placeholder="Create a password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('buyerPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="buyerConfirmPassword" class="form-label">Confirm Password *</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="buyerConfirmPassword" class="form-input" placeholder="Confirm your password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('buyerConfirmPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn">Create Buyer Account</button>
+        </form>
+
+        <!-- Seller Signup Form -->
+        <form class="auth-form" id="sellerSignupForm">
+            <h3 class="role-title">Create Seller Account</h3>
+            
+            <div class="profile-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="profileProgress" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">Profile Completion: 0%</div>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerName" class="form-label">Full Name / Company Name *</label>
+                <input type="text" id="sellerName" class="form-input" placeholder="Enter your name or company name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerCategory" class="form-label">Service Category *</label>
+                <select id="sellerCategory" class="form-select" required>
+                    <option value="">Select your service category</option>
+                    <option value="construction">Construction Companies / Contractors</option>
+                    <option value="interior">Interior Designers</option>
+                    <option value="broker">Property Brokers</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerEmail" class="form-label">Email Address *</label>
+                <input type="email" id="sellerEmail" class="form-input" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerPhone" class="form-label">Phone Number *</label>
+                <input type="tel" id="sellerPhone" class="form-input" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerWebsite" class="form-label">Website Link (Optional)</label>
+                <input type="url" id="sellerWebsite" class="form-input" placeholder="https://yourwebsite.com">
+            </div>
+
+            <div class="form-group">
+                <label for="sellerGovtId" class="form-label">Government ID *</label>
+                <div class="file-upload">
+                    <input type="file" id="sellerGovtId" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <label for="sellerGovtId" class="file-upload-label">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div class="file-upload-text">Upload Government ID</div>
+                        <div class="file-upload-hint">Aadhaar, PAN, Passport, etc. (PDF, JPG, PNG)</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerGst" class="form-label">GST Certificate (Optional)</label>
+                <div class="file-upload">
+                    <input type="file" id="sellerGst" accept=".pdf,.jpg,.jpeg,.png">
+                    <label for="sellerGst" class="file-upload-label">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="file-upload-text">Upload GST Certificate</div>
+                        <div class="file-upload-hint">For business verification (PDF, JPG, PNG)</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerPassword" class="form-label">Password *</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="sellerPassword" class="form-input" placeholder="Create a password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('sellerPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sellerConfirmPassword" class="form-label">Confirm Password *</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="sellerConfirmPassword" class="form-input" placeholder="Confirm your password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('sellerConfirmPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn">Create Seller Account</button>
+        </form>
+
+        <!-- Login Form -->
+        <form class="auth-form" id="loginForm">
+            <h3 class="role-title">Login to Your Account</h3>
+            
+            <div class="form-group">
+                <label for="loginEmail" class="form-label">Email Address</label>
+                <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword" class="form-label">Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="forgot-password">
+                    <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn">Login</button>
+        </form>
+
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages"></div>
+
+        <!-- Toggle Links -->
+        <div class="auth-toggle">
+            <span id="toggleText">Already have an account? </span>
+            <a class="toggle-link" id="toggleLink">Login</a>
+        </div>
+    </div>
+
+    <script>
+        class AuthSystem {
+            constructor() {
+                this.currentMode = 'signup';
+                this.selectedRole = null;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateToggleText();
+            }
+
+            bindEvents() {
+                // Role selection
+                document.querySelectorAll('.role-option').forEach(option => {
+                    option.addEventListener('click', () => this.selectRole(option));
+                });
+
+                // Form submissions
+                document.getElementById('buyerSignupForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleBuyerSignup();
+                });
+
+                document.getElementById('sellerSignupForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSellerSignup();
+                });
+
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Toggle between login/signup
+                document.getElementById('toggleLink').addEventListener('click', () => {
+                    this.toggleMode();
+                });
+
+                // File upload preview
+                document.getElementById('sellerGovtId').addEventListener('change', (e) => {
+                    this.handleFileUpload(e, 'sellerGovtId');
+                });
+
+                document.getElementById('sellerGst').addEventListener('change', (e) => {
+                    this.handleFileUpload(e, 'sellerGst');
+                });
+
+                // Profile progress calculation
+                document.querySelectorAll('#sellerSignupForm input, #sellerSignupForm select').forEach(input => {
+                    input.addEventListener('input', () => this.updateProfileProgress());
+                });
+            }
+
+            selectRole(option) {
+                // Remove selection from all options
+                document.querySelectorAll('.role-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                // Add selection to clicked option
+                option.classList.add('selected');
+                this.selectedRole = option.dataset.role;
+
+                // Show appropriate form
+                this.showForm();
+            }
+
+            showForm() {
+                // Hide all forms
+                document.querySelectorAll('.auth-form').forEach(form => {
+                    form.classList.remove('active');
+                });
+
+                // Show role selection
+                document.getElementById('roleSelection').style.display = 'block';
+
+                if (this.currentMode === 'signup') {
+                    if (this.selectedRole === 'buyer') {
+                        document.getElementById('buyerSignupForm').classList.add('active');
+                    } else if (this.selectedRole === 'seller') {
+                        document.getElementById('sellerSignupForm').classList.add('active');
+                    }
+                } else {
+                    document.getElementById('loginForm').classList.add('active');
+                }
+            }
+
+            toggleMode() {
+                this.currentMode = this.currentMode === 'signup' ? 'login' : 'signup';
+                this.updateToggleText();
+                this.showForm();
+            }
+
+            updateToggleText() {
+                const toggleText = document.getElementById('toggleText');
+                const toggleLink = document.getElementById('toggleLink');
+
+                if (this.currentMode === 'signup') {
+                    toggleText.textContent = 'Already have an account? ';
+                    toggleLink.textContent = 'Login';
+                } else {
+                    toggleText.textContent = "Don't have an account? ";
+                    toggleLink.textContent = 'Sign Up';
+                }
+            }
+
+            async handleBuyerSignup() {
+                const formData = {
+                    name: document.getElementById('buyerName').value,
+                    email: document.getElementById('buyerEmail').value,
+                    phone: document.getElementById('buyerPhone').value,
+                    password: document.getElementById('buyerPassword').value,
+                    confirmPassword: document.getElementById('buyerConfirmPassword').value,
+                    role: 'buyer'
+                };
+
+                if (formData.password !== formData.confirmPassword) {
+                    this.showMessage('Passwords do not match', 'error');
+                    return;
+                }
+
+                this.showLoading(true);
+                
+                try {
+                    // Simulate API call
+                    await this.simulateApiCall();
+                    
+                    // Store user data in localStorage
+                    const userData = {
+                        id: Date.now(),
+                        ...formData,
+                        type: 'buyer',
+                        createdAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(userData));
+                    
+                    this.showMessage('Buyer account created successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'buyer-dashboard.html';
+                    }, 1500);
+                } catch (error) {
+                    this.showMessage('Failed to create account. Please try again.', 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async handleSellerSignup() {
+                const formData = {
+                    name: document.getElementById('sellerName').value,
+                    category: document.getElementById('sellerCategory').value,
+                    email: document.getElementById('sellerEmail').value,
+                    phone: document.getElementById('sellerPhone').value,
+                    website: document.getElementById('sellerWebsite').value,
+                    govtId: document.getElementById('sellerGovtId').files[0],
+                    gst: document.getElementById('sellerGst').files[0],
+                    password: document.getElementById('sellerPassword').value,
+                    confirmPassword: document.getElementById('sellerConfirmPassword').value,
+                    role: 'seller'
+                };
+
+                if (formData.password !== formData.confirmPassword) {
+                    this.showMessage('Passwords do not match', 'error');
+                    return;
+                }
+
+                if (!formData.govtId) {
+                    this.showMessage('Please upload your Government ID', 'error');
+                    return;
+                }
+
+                this.showLoading(true);
+                
+                try {
+                    // Simulate API call
+                    await this.simulateApiCall();
+                    
+                    // Store user data in localStorage
+                    const userData = {
+                        id: Date.now(),
+                        ...formData,
+                        type: 'seller',
+                        verificationStatus: 'pending',
+                        profileCompletion: this.calculateProfileCompletion(),
+                        createdAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(userData));
+                    
+                    this.showMessage('Seller account created successfully! Verification pending.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'seller-dashboard.html';
+                    }, 1500);
+                } catch (error) {
+                    this.showMessage('Failed to create account. Please try again.', 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async handleLogin() {
+                const formData = {
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                };
+
+                this.showLoading(true);
+                
+                try {
+                    // Simulate API call
+                    await this.simulateApiCall();
+                    
+                    // For demo purposes, check if user exists in localStorage
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const user = users.find(u => u.email === formData.email && u.password === formData.password);
+                    
+                    if (user) {
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        this.showMessage('Login successful!', 'success');
+                        setTimeout(() => {
+                            window.location.href = user.type === 'seller' ? 'seller-dashboard.html' : 'buyer-dashboard.html';
+                        }, 1500);
+                    } else {
+                        this.showMessage('Invalid email or password', 'error');
+                    }
+                } catch (error) {
+                    this.showMessage('Login failed. Please try again.', 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            handleFileUpload(event, fieldId) {
+                const file = event.target.files[0];
+                const label = event.target.nextElementSibling;
+                
+                if (file) {
+                    label.innerHTML = `
+                        <div class="file-upload-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="file-upload-text">${file.name}</div>
+                        <div class="file-upload-hint">File uploaded successfully</div>
+                    `;
+                    label.style.borderColor = '#48bb78';
+                    label.style.background = '#f0fff4';
+                }
+                
+                this.updateProfileProgress();
+            }
+
+            updateProfileProgress() {
+                const form = document.getElementById('sellerSignupForm');
+                const inputs = form.querySelectorAll('input[required], select[required]');
+                const optionalInputs = form.querySelectorAll('input:not([required]), select:not([required])');
+                
+                let completed = 0;
+                let total = inputs.length + optionalInputs.length;
+                
+                // Check required fields
+                inputs.forEach(input => {
+                    if (input.type === 'file') {
+                        if (input.files.length > 0) completed++;
+                    } else if (input.value.trim()) {
+                        completed++;
+                    }
+                });
+                
+                // Check optional fields
+                optionalInputs.forEach(input => {
+                    if (input.value.trim()) completed++;
+                });
+                
+                const percentage = Math.round((completed / total) * 100);
+                
+                document.getElementById('profileProgress').style.width = percentage + '%';
+                document.getElementById('progressText').textContent = `Profile Completion: ${percentage}%`;
+            }
+
+            calculateProfileCompletion() {
+                const form = document.getElementById('sellerSignupForm');
+                const inputs = form.querySelectorAll('input, select');
+                
+                let completed = 0;
+                let total = inputs.length;
+                
+                inputs.forEach(input => {
+                    if (input.type === 'file') {
+                        if (input.files.length > 0) completed++;
+                    } else if (input.value.trim()) {
+                        completed++;
+                    }
+                });
+                
+                return Math.round((completed / total) * 100);
+            }
+
+            showLoading(show) {
+                document.getElementById('loading').style.display = show ? 'block' : 'none';
+            }
+
+            showMessage(text, type) {
+                const messagesDiv = document.getElementById('messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}`;
+                messageDiv.textContent = text;
+                
+                messagesDiv.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 5000);
+            }
+
+            async simulateApiCall() {
+                return new Promise((resolve) => {
+                    setTimeout(resolve, 1500);
+                });
+            }
+        }
+
+        // Initialize the authentication system
+        document.addEventListener('DOMContentLoaded', () => {
+            new AuthSystem();
+        });
+
+        // Password Toggle Function
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Forgot Password Function
+        function showForgotPassword() {
+            const email = document.getElementById('loginEmail').value;
+            if (!email) {
+                alert('Please enter your email address first');
+                return;
+            }
+            
+            // Simulate forgot password functionality
+            alert(`Password reset link has been sent to ${email}\n\nNote: This is a demo. In a real application, you would receive an email with a password reset link.`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - Vyom.AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7fafc;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .ai-text {
+            color: #48bb78;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #4299e1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 40px 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .profile-card {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 0 auto 15px;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .profile-category {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .verification-badge.pending {
+            background: #fef5e7;
+            color: #d69e2e;
+        }
+
+        .verification-badge.verified {
+            background: #f0fff4;
+            color: #38a169;
+        }
+
+        /* Dashboard Main */
+        .dashboard-main {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        /* Profile Completion */
+        .profile-completion {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .completion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .completion-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .completion-percentage {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #4299e1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.3s ease;
+        }
+
+        /* Verification Status */
+        .verification-status {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .verification-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .verification-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .verification-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .verification-items {
+            display: grid;
+            gap: 15px;
+        }
+
+        .verification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .verification-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .verification-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .verification-item-icon.completed {
+            background: #f0fff4;
+            color: #38a169;
+        }
+
+        .verification-item-icon.pending {
+            background: #fef5e7;
+            color: #d69e2e;
+        }
+
+        .verification-item-text {
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .verification-item-status {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .verification-item-status.completed {
+            color: #38a169;
+        }
+
+        .verification-item-status.pending {
+            color: #d69e2e;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                Vyom.<span class="ai-text">AI</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Analytics
+                </a>
+                <a href="#" class="nav-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="profile-name" id="profileName">Loading...</h3>
+                        <p class="profile-category" id="profileCategory">Loading...</p>
+                        <div class="verification-badge pending" id="verificationBadge">
+                            <i class="fas fa-clock"></i>
+                            Pending Verification
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Dashboard Area -->
+                <div class="dashboard-main">
+                    <div class="dashboard-header">
+                        <h1 class="dashboard-title">Seller Dashboard</h1>
+                        <p class="dashboard-subtitle">Welcome back! Here's your profile status and verification progress.</p>
+                    </div>
+
+                    <!-- Profile Completion -->
+                    <div class="profile-completion">
+                        <div class="completion-header">
+                            <h3 class="completion-title">Profile Completion</h3>
+                            <span class="completion-percentage" id="completionPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Verification Status -->
+                    <div class="verification-status">
+                        <div class="verification-header">
+                            <div class="verification-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="verification-title">Verification Status</h3>
+                        </div>
+                        <div class="verification-items">
+                            <div class="verification-item">
+                                <div class="verification-info">
+                                    <div class="verification-item-icon pending" id="govtIdIcon">
+                                        <i class="fas fa-id-card"></i>
+                                    </div>
+                                    <span class="verification-item-text">Government ID</span>
+                                </div>
+                                <span class="verification-item-status pending" id="govtIdStatus">Pending</span>
+                            </div>
+                            <div class="verification-item">
+                                <div class="verification-info">
+                                    <div class="verification-item-icon pending" id="gstIcon">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </div>
+                                    <span class="verification-item-text">GST Certificate</span>
+                                </div>
+                                <span class="verification-item-status pending" id="gstStatus">Optional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        class SellerDashboard {
+            constructor() {
+                this.currentUser = null;
+                this.init();
+            }
+
+            init() {
+                this.loadUserData();
+                this.updateDashboard();
+            }
+
+            loadUserData() {
+                const userData = localStorage.getItem('currentUser');
+                if (userData) {
+                    this.currentUser = JSON.parse(userData);
+                } else {
+                    window.location.href = 'auth.html';
+                }
+            }
+
+            updateDashboard() {
+                if (!this.currentUser) return;
+
+                // Update profile information
+                document.getElementById('profileName').textContent = this.currentUser.name || 'Unknown';
+                document.getElementById('profileCategory').textContent = this.getCategoryDisplayName(this.currentUser.category);
+                document.getElementById('profileAvatar').innerHTML = this.getInitials(this.currentUser.name);
+
+                // Update verification status
+                this.updateVerificationStatus();
+
+                // Update profile completion
+                this.updateProfileCompletion();
+            }
+
+            updateVerificationStatus() {
+                const status = this.currentUser.verificationStatus || 'pending';
+                const badge = document.getElementById('verificationBadge');
+                
+                badge.className = `verification-badge ${status}`;
+                
+                if (status === 'verified') {
+                    badge.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+                } else if (status === 'rejected') {
+                    badge.innerHTML = '<i class="fas fa-times-circle"></i> Rejected';
+                } else {
+                    badge.innerHTML = '<i class="fas fa-clock"></i> Pending Verification';
+                }
+
+                // Update individual verification items
+                this.updateVerificationItem('govtId', this.currentUser.govtId ? 'completed' : 'pending');
+                this.updateVerificationItem('gst', this.currentUser.gst ? 'completed' : 'pending');
+            }
+
+            updateVerificationItem(item, status) {
+                const icon = document.getElementById(item + 'Icon');
+                const statusElement = document.getElementById(item + 'Status');
+                
+                if (icon && statusElement) {
+                    icon.className = `verification-item-icon ${status}`;
+                    
+                    if (status === 'completed') {
+                        icon.innerHTML = '<i class="fas fa-check"></i>';
+                        statusElement.textContent = 'Verified';
+                        statusElement.className = 'verification-item-status completed';
+                    } else if (status === 'pending') {
+                        icon.innerHTML = item === 'gst' ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-clock"></i>';
+                        statusElement.textContent = item === 'gst' ? 'Optional' : 'Pending';
+                        statusElement.className = 'verification-item-status pending';
+                    }
+                }
+            }
+
+            updateProfileCompletion() {
+                const completion = this.currentUser.profileCompletion || 0;
+                
+                document.getElementById('completionPercentage').textContent = completion + '%';
+                document.getElementById('progressFill').style.width = completion + '%';
+            }
+
+            getCategoryDisplayName(category) {
+                const categories = {
+                    'construction': 'Construction & Contractors',
+                    'interior': 'Interior Designers',
+                    'broker': 'Property Brokers'
+                };
+                return categories[category] || 'Unknown Category';
+            }
+
+            getInitials(name) {
+                if (!name) return '<i class="fas fa-user"></i>';
+                return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'auth.html';
+        }
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            new SellerDashboard();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - Vyom.AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7fafc;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .ai-text {
+            color: #48bb78;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #4299e1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 40px 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .profile-card {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 0 auto 15px;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .user-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            background: #ebf8ff;
+            color: #4299e1;
+        }
+
+        /* Dashboard Main */
+        .dashboard-main {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        /* Service Categories */
+        .service-categories {
+            margin-bottom: 30px;
+        }
+
+        .categories-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .categories-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .categories-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid #e2e8f0;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #4299e1;
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 15px;
+        }
+
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 15px;
+        }
+
+        .category-count {
+            font-size: 0.8rem;
+            color: #4299e1;
+            font-weight: 500;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .activity-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .activity-icon-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: #ebf8ff;
+            color: #4299e1;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            margin-top: 30px;
+        }
+
+        .actions-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .actions-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .actions-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #4299e1;
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .action-text {
+            font-weight: 500;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                Vyom.<span class="ai-text">AI</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-search"></i>
+                    Browse Services
+                </a>
+                <a href="#" class="nav-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="profile-name" id="profileName">Loading...</h3>
+                        <p class="profile-email" id="profileEmail">Loading...</p>
+                        <div class="user-type-badge">
+                            <i class="fas fa-search"></i>
+                            Buyer Account
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Dashboard Area -->
+                <div class="dashboard-main">
+                    <div class="dashboard-header">
+                        <h1 class="dashboard-title">Buyer Dashboard</h1>
+                        <p class="dashboard-subtitle">Welcome back! Explore trusted property services and find the perfect professionals.</p>
+                    </div>
+
+                    <!-- Service Categories -->
+                    <div class="service-categories">
+                        <div class="categories-header">
+                            <div class="categories-icon">
+                                <i class="fas fa-th-large"></i>
+                            </div>
+                            <h3 class="categories-title">Service Categories</h3>
+                        </div>
+                        <div class="categories-grid">
+                            <div class="category-card" onclick="browseCategory('construction')">
+                                <div class="category-icon">
+                                    <i class="fas fa-hammer"></i>
+                                </div>
+                                <div class="category-name">Construction</div>
+                                <div class="category-description">Builders, contractors & renovation experts</div>
+                                <div class="category-count">24 Verified Sellers</div>
+                            </div>
+                            <div class="category-card" onclick="browseCategory('interior')">
+                                <div class="category-icon">
+                                    <i class="fas fa-paint-brush"></i>
+                                </div>
+                                <div class="category-name">Interior Design</div>
+                                <div class="category-description">Interior designers & decorators</div>
+                                <div class="category-count">18 Verified Sellers</div>
+                            </div>
+                            <div class="category-card" onclick="browseCategory('broker')">
+                                <div class="category-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <div class="category-name">Property Brokers</div>
+                                <div class="category-description">Real estate agents & brokers</div>
+                                <div class="category-count">32 Verified Sellers</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="recent-activity">
+                        <div class="activity-header">
+                            <div class="activity-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h3 class="activity-title">Recent Activity</h3>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon-small">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Viewed Construction Services</div>
+                                    <div class="activity-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon-small">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Saved Interior Designer Profile</div>
+                                    <div class="activity-time">1 day ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon-small">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Contacted Property Broker</div>
+                                    <div class="activity-time">3 days ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <div class="actions-header">
+                            <div class="actions-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 class="actions-title">Quick Actions</h3>
+                        </div>
+                        <div class="actions-grid">
+                            <a href="#" class="action-btn" onclick="searchServices()">
+                                <div class="action-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="action-text">Search Services</div>
+                            </a>
+                            <a href="#" class="action-btn" onclick="viewFavorites()">
+                                <div class="action-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="action-text">My Favorites</div>
+                            </a>
+                            <a href="#" class="action-btn" onclick="contactHistory()">
+                                <div class="action-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="action-text">Contact History</div>
+                            </a>
+                            <a href="#" class="action-btn" onclick="editProfile()">
+                                <div class="action-icon">
+                                    <i class="fas fa-user-edit"></i>
+                                </div>
+                                <div class="action-text">Edit Profile</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        class BuyerDashboard {
+            constructor() {
+                this.currentUser = null;
+                this.init();
+            }
+
+            init() {
+                this.loadUserData();
+                this.updateDashboard();
+            }
+
+            loadUserData() {
+                const userData = localStorage.getItem('currentUser');
+                if (userData) {
+                    this.currentUser = JSON.parse(userData);
+                } else {
+                    window.location.href = 'auth.html';
+                }
+            }
+
+            updateDashboard() {
+                if (!this.currentUser) return;
+
+                // Update profile information
+                document.getElementById('profileName').textContent = this.currentUser.name || 'Unknown';
+                document.getElementById('profileEmail').textContent = this.currentUser.email || 'No email';
+                document.getElementById('profileAvatar').innerHTML = this.getInitials(this.currentUser.name);
+            }
+
+            getInitials(name) {
+                if (!name) return '<i class="fas fa-user"></i>';
+                return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            }
+        }
+
+        // Global functions
+        function browseCategory(category) {
+            // Redirect to category page with filters
+            window.location.href = `category-${category}.html`;
+        }
+
+        function searchServices() {
+            // Implement search functionality
+            alert('Search functionality coming soon!');
+        }
+
+        function viewFavorites() {
+            // Implement favorites view
+            alert('Favorites feature coming soon!');
+        }
+
+        function contactHistory() {
+            // Implement contact history
+            alert('Contact history coming soon!');
+        }
+
+        function editProfile() {
+            // Implement profile editing
+            alert('Profile editing coming soon!');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'auth.html';
+        }
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            new BuyerDashboard();
+        });
+    </script>
+</body>
+</html>
